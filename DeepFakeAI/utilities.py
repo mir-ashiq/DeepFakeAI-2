@@ -13,10 +13,10 @@ from typing import List, Optional
 import onnxruntime
 from tqdm import tqdm
 
-import facefusion.globals
-from facefusion import wording
+import DeepFakeAI.globals
+from DeepFakeAI import wording
 
-TEMP_DIRECTORY_PATH = os.path.join(tempfile.gettempdir(), 'facefusion')
+TEMP_DIRECTORY_PATH = os.path.join(tempfile.gettempdir(), 'DeepFakeAI')
 TEMP_OUTPUT_NAME = 'temp.mp4'
 
 # monkey patch ssl
@@ -46,9 +46,9 @@ def detect_fps(target_path : str) -> Optional[float]:
 
 def extract_frames(target_path : str, fps : float) -> bool:
 	temp_directory_path = get_temp_directory_path(target_path)
-	temp_frame_quality = round(31 - (facefusion.globals.temp_frame_quality * 0.31))
-	trim_frame_start = facefusion.globals.trim_frame_start
-	trim_frame_end = facefusion.globals.trim_frame_end
+	temp_frame_quality = round(31 - (DeepFakeAI.globals.temp_frame_quality * 0.31))
+	trim_frame_start = DeepFakeAI.globals.trim_frame_start
+	trim_frame_end = DeepFakeAI.globals.trim_frame_end
 	commands = [ '-hwaccel', 'auto', '-i', target_path, '-q:v', str(temp_frame_quality), '-pix_fmt', 'rgb24', ]
 	if trim_frame_start is not None and trim_frame_end is not None:
 		commands.extend([ '-vf', 'trim=start_frame=' + str(trim_frame_start) + ':end_frame=' + str(trim_frame_end) + ',fps=' + str(fps) ])
@@ -58,18 +58,18 @@ def extract_frames(target_path : str, fps : float) -> bool:
 		commands.extend([ '-vf', 'trim=end_frame=' + str(trim_frame_end) + ',fps=' + str(fps) ])
 	else:
 		commands.extend([ '-vf', 'fps=' + str(fps) ])
-	commands.extend([os.path.join(temp_directory_path, '%04d.' + facefusion.globals.temp_frame_format)])
+	commands.extend([os.path.join(temp_directory_path, '%04d.' + DeepFakeAI.globals.temp_frame_format)])
 	return run_ffmpeg(commands)
 
 
 def create_video(target_path : str, fps : float) -> bool:
 	temp_output_path = get_temp_output_path(target_path)
 	temp_directory_path = get_temp_directory_path(target_path)
-	output_video_quality = round(51 - (facefusion.globals.output_video_quality * 0.5))
-	commands = [ '-hwaccel', 'auto', '-r', str(fps), '-i', os.path.join(temp_directory_path, '%04d.' + facefusion.globals.temp_frame_format), '-c:v', facefusion.globals.output_video_encoder ]
-	if facefusion.globals.output_video_encoder in [ 'libx264', 'libx265', 'libvpx' ]:
+	output_video_quality = round(51 - (DeepFakeAI.globals.output_video_quality * 0.5))
+	commands = [ '-hwaccel', 'auto', '-r', str(fps), '-i', os.path.join(temp_directory_path, '%04d.' + DeepFakeAI.globals.temp_frame_format), '-c:v', DeepFakeAI.globals.output_video_encoder ]
+	if DeepFakeAI.globals.output_video_encoder in [ 'libx264', 'libx265', 'libvpx' ]:
 		commands.extend([ '-crf', str(output_video_quality) ])
-	if facefusion.globals.output_video_encoder in [ 'h264_nvenc', 'hevc_nvenc' ]:
+	if DeepFakeAI.globals.output_video_encoder in [ 'h264_nvenc', 'hevc_nvenc' ]:
 		commands.extend([ '-cq', str(output_video_quality) ])
 	commands.extend([ '-pix_fmt', 'yuv420p', '-vf', 'colorspace=bt709:iall=bt601-6-625', '-y', temp_output_path ])
 	return run_ffmpeg(commands)
@@ -77,8 +77,8 @@ def create_video(target_path : str, fps : float) -> bool:
 
 def restore_audio(target_path : str, output_path : str) -> None:
 	fps = detect_fps(target_path)
-	trim_frame_start = facefusion.globals.trim_frame_start
-	trim_frame_end = facefusion.globals.trim_frame_end
+	trim_frame_start = DeepFakeAI.globals.trim_frame_start
+	trim_frame_end = DeepFakeAI.globals.trim_frame_end
 	temp_output_path = get_temp_output_path(target_path)
 	commands = [ '-hwaccel', 'auto', '-i', temp_output_path, '-i', target_path ]
 	if trim_frame_start is None and trim_frame_end is None:
@@ -101,7 +101,7 @@ def restore_audio(target_path : str, output_path : str) -> None:
 
 def get_temp_frame_paths(target_path : str) -> List[str]:
 	temp_directory_path = get_temp_directory_path(target_path)
-	return glob.glob((os.path.join(glob.escape(temp_directory_path), '*.' + facefusion.globals.temp_frame_format)))
+	return glob.glob((os.path.join(glob.escape(temp_directory_path), '*.' + DeepFakeAI.globals.temp_frame_format)))
 
 
 def get_temp_directory_path(target_path : str) -> str:
@@ -139,7 +139,7 @@ def move_temp(target_path : str, output_path : str) -> None:
 def clear_temp(target_path : str) -> None:
 	temp_directory_path = get_temp_directory_path(target_path)
 	parent_directory_path = os.path.dirname(temp_directory_path)
-	if not facefusion.globals.keep_temp and os.path.isdir(temp_directory_path):
+	if not DeepFakeAI.globals.keep_temp and os.path.isdir(temp_directory_path):
 		shutil.rmtree(temp_directory_path)
 	if os.path.exists(parent_directory_path) and not os.listdir(parent_directory_path):
 		os.rmdir(parent_directory_path)

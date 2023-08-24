@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from facefusion.typing import FaceRecognition, FaceAnalyserDirection, FaceAnalyserAge, FaceAnalyserGender, TempFrameFormat
+from DeepFakeAI.typing import FaceRecognition, FaceAnalyserDirection, FaceAnalyserAge, FaceAnalyserGender, TempFrameFormat
 
 source_path : Optional[str] = None
 target_path : Optional[str] = None

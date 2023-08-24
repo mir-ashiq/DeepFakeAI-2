@@ -1,11 +1,11 @@
 from typing import Tuple, Optional
 import gradio
 
-import facefusion.globals
-from facefusion import wording
-from facefusion.core import conditional_process
-from facefusion.uis.typing import Update
-from facefusion.utilities import is_image, is_video, normalize_output_path, clear_temp
+import DeepFakeAI.globals
+from DeepFakeAI import wording
+from DeepFakeAI.core import conditional_process
+from DeepFakeAI.uis.typing import Update
+from DeepFakeAI.utilities import is_image, is_video, normalize_output_path, clear_temp
 
 OUTPUT_START_BUTTON : Optional[gradio.Button] = None
 OUTPUT_CLEAR_BUTTON : Optional[gradio.Button] = None
@@ -39,17 +39,17 @@ def listen() -> None:
 
 
 def update() -> Tuple[Update, Update]:
-	facefusion.globals.output_path = normalize_output_path(facefusion.globals.source_path, facefusion.globals.target_path, '.')
-	if facefusion.globals.output_path:
+	DeepFakeAI.globals.output_path = normalize_output_path(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, '.')
+	if DeepFakeAI.globals.output_path:
 		conditional_process()
-		if is_image(facefusion.globals.output_path):
-			return gradio.update(value = facefusion.globals.output_path, visible = True), gradio.update(value = None, visible = False)
-		if is_video(facefusion.globals.output_path):
-			return gradio.update(value = None, visible = False), gradio.update(value = facefusion.globals.output_path, visible = True)
+		if is_image(DeepFakeAI.globals.output_path):
+			return gradio.update(value = DeepFakeAI.globals.output_path, visible = True), gradio.update(value = None, visible = False)
+		if is_video(DeepFakeAI.globals.output_path):
+			return gradio.update(value = None, visible = False), gradio.update(value = DeepFakeAI.globals.output_path, visible = True)
 	return gradio.update(value = None, visible = False), gradio.update(value = None, visible = False)
 
 
 def clear() -> Tuple[Update, Update]:
-	if facefusion.globals.target_path:
-		clear_temp(facefusion.globals.target_path)
+	if DeepFakeAI.globals.target_path:
+		clear_temp(DeepFakeAI.globals.target_path)
 	return gradio.update(value = None), gradio.update(value = None)

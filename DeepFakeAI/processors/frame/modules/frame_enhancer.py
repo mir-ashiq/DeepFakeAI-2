@@ -4,9 +4,9 @@ import threading
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer
 
-import facefusion.processors.frame.core as frame_processors
-from facefusion.typing import Frame, Face
-from facefusion.utilities import conditional_download, resolve_relative_path
+import DeepFakeAI.processors.frame.core as frame_processors
+from DeepFakeAI.typing import Frame, Face
+from DeepFakeAI.utilities import conditional_download, resolve_relative_path
 
 FRAME_PROCESSOR = None
 THREAD_SEMAPHORE = threading.Semaphore()
@@ -47,7 +47,7 @@ def clear_frame_processor() -> None:
 
 def pre_check() -> bool:
 	download_directory_path = resolve_relative_path('../.assets/models')
-	conditional_download(download_directory_path, ['https://github.com/facefusion/facefusion-assets/releases/download/models/RealESRGAN_x4plus.pth'])
+	conditional_download(download_directory_path, ['https://github.com/DeepFakeAI/DeepFakeAI-assets/releases/download/models/RealESRGAN_x4plus.pth'])
 	return True
 
 

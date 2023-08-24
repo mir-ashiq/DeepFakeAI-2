@@ -4,16 +4,16 @@ from time import sleep
 import cv2
 import gradio
 
-import facefusion.choices
-import facefusion.globals
-from facefusion import wording
-from facefusion.capturer import get_video_frame
-from facefusion.face_analyser import get_many_faces
-from facefusion.face_reference import clear_face_reference
-from facefusion.typing import Frame, FaceRecognition
-from facefusion.uis import core as ui
-from facefusion.uis.typing import ComponentName, Update
-from facefusion.utilities import is_image, is_video
+import DeepFakeAI.choices
+import DeepFakeAI.globals
+from DeepFakeAI import wording
+from DeepFakeAI.capturer import get_video_frame
+from DeepFakeAI.face_analyser import get_many_faces
+from DeepFakeAI.face_reference import clear_face_reference
+from DeepFakeAI.typing import Frame, FaceRecognition
+from DeepFakeAI.uis import core as ui
+from DeepFakeAI.uis.typing import ComponentName, Update
+from DeepFakeAI.utilities import is_image, is_video
 
 FACE_RECOGNITION_DROPDOWN : Optional[gradio.Dropdown] = None
 REFERENCE_FACE_POSITION_GALLERY : Optional[gradio.Gallery] = None
@@ -32,26 +32,26 @@ def render() -> None:
 			'object_fit': 'cover',
 			'columns': 10,
 			'allow_preview': False,
-			'visible': 'reference' in facefusion.globals.face_recognition
+			'visible': 'reference' in DeepFakeAI.globals.face_recognition
 		}
-		if is_image(facefusion.globals.target_path):
-			reference_frame = cv2.imread(facefusion.globals.target_path)
+		if is_image(DeepFakeAI.globals.target_path):
+			reference_frame = cv2.imread(DeepFakeAI.globals.target_path)
 			reference_face_gallery_args['value'] = extract_gallery_frames(reference_frame)
-		if is_video(facefusion.globals.target_path):
-			reference_frame = get_video_frame(facefusion.globals.target_path, facefusion.globals.reference_frame_number)
+		if is_video(DeepFakeAI.globals.target_path):
+			reference_frame = get_video_frame(DeepFakeAI.globals.target_path, DeepFakeAI.globals.reference_frame_number)
 			reference_face_gallery_args['value'] = extract_gallery_frames(reference_frame)
 		FACE_RECOGNITION_DROPDOWN = gradio.Dropdown(
 			label = wording.get('face_recognition_dropdown_label'),
-			choices = facefusion.choices.face_recognition,
-			value = facefusion.globals.face_recognition
+			choices = DeepFakeAI.choices.face_recognition,
+			value = DeepFakeAI.globals.face_recognition
 		)
 		REFERENCE_FACE_POSITION_GALLERY = gradio.Gallery(**reference_face_gallery_args)
 		REFERENCE_FACE_DISTANCE_SLIDER = gradio.Slider(
 			label = wording.get('reference_face_distance_slider_label'),
-			value = facefusion.globals.reference_face_distance,
+			value = DeepFakeAI.globals.reference_face_distance,
 			maximum = 3,
 			step = 0.05,
-			visible = 'reference' in facefusion.globals.face_recognition
+			visible = 'reference' in DeepFakeAI.globals.face_recognition
 		)
 		ui.register_component('face_recognition_dropdown', FACE_RECOGNITION_DROPDOWN)
 		ui.register_component('reference_face_position_gallery', REFERENCE_FACE_POSITION_GALLERY)
@@ -85,10 +85,10 @@ def listen() -> None:
 
 def update_face_recognition(face_recognition : FaceRecognition) -> Tuple[Update, Update]:
 	if face_recognition == 'reference':
-		facefusion.globals.face_recognition = face_recognition
+		DeepFakeAI.globals.face_recognition = face_recognition
 		return gradio.update(visible = True), gradio.update(visible = True)
 	if face_recognition == 'many':
-		facefusion.globals.face_recognition = face_recognition
+		DeepFakeAI.globals.face_recognition = face_recognition
 		return gradio.update(visible = False), gradio.update(visible = False)
 
 
@@ -100,12 +100,12 @@ def clear_and_update_face_reference_position(event: gradio.SelectData) -> Update
 def update_face_reference_position(reference_face_position : int = 0) -> Update:
 	sleep(0.2)
 	gallery_frames = []
-	facefusion.globals.reference_face_position = reference_face_position
-	if is_image(facefusion.globals.target_path):
-		reference_frame = cv2.imread(facefusion.globals.target_path)
+	DeepFakeAI.globals.reference_face_position = reference_face_position
+	if is_image(DeepFakeAI.globals.target_path):
+		reference_frame = cv2.imread(DeepFakeAI.globals.target_path)
 		gallery_frames = extract_gallery_frames(reference_frame)
-	if is_video(facefusion.globals.target_path):
-		reference_frame = get_video_frame(facefusion.globals.target_path, facefusion.globals.reference_frame_number)
+	if is_video(DeepFakeAI.globals.target_path):
+		reference_frame = get_video_frame(DeepFakeAI.globals.target_path, DeepFakeAI.globals.reference_frame_number)
 		gallery_frames = extract_gallery_frames(reference_frame)
 	if gallery_frames:
 		return gradio.update(value = gallery_frames)
@@ -113,7 +113,7 @@ def update_face_reference_position(reference_face_position : int = 0) -> Update:
 
 
 def update_reference_face_distance(reference_face_distance : float) -> Update:
-	facefusion.globals.reference_face_distance = reference_face_distance
+	DeepFakeAI.globals.reference_face_distance = reference_face_distance
 	return gradio.update(value = reference_face_distance)
 
 

@@ -4,10 +4,10 @@ import sys
 import cv2
 import gradio
 
-import facefusion.globals
-from facefusion import metadata, wording
-from facefusion.typing import Frame
-from facefusion.uis.typing import Component, ComponentName
+import DeepFakeAI.globals
+from DeepFakeAI import metadata, wording
+from DeepFakeAI.typing import Frame
+from DeepFakeAI.uis.typing import Component, ComponentName
 
 COMPONENTS: Dict[ComponentName, Component] = {}
 UI_LAYOUT_METHODS =\
@@ -20,7 +20,7 @@ UI_LAYOUT_METHODS =\
 
 def launch() -> None:
 	with gradio.Blocks(theme = get_theme(), title = metadata.get('name') + ' ' + metadata.get('version')) as ui:
-		for ui_layout in facefusion.globals.ui_layouts:
+		for ui_layout in DeepFakeAI.globals.ui_layouts:
 			ui_layout_module = load_ui_layout_module(ui_layout)
 			ui_layout_module.pre_check()
 			ui_layout_module.render()
@@ -30,7 +30,7 @@ def launch() -> None:
 
 def load_ui_layout_module(ui_layout : str) -> Any:
 	try:
-		ui_layout_module = importlib.import_module('facefusion.uis.layouts.' + ui_layout)
+		ui_layout_module = importlib.import_module('DeepFakeAI.uis.layouts.' + ui_layout)
 		for method_name in UI_LAYOUT_METHODS:
 			if not hasattr(ui_layout_module, method_name):
 				raise NotImplementedError

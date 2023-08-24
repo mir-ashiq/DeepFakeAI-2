@@ -2,11 +2,11 @@ from typing import Optional
 
 import gradio
 
-import facefusion.choices
-import facefusion.globals
-from facefusion import wording
-from facefusion.uis import core as ui
-from facefusion.uis.typing import Update
+import DeepFakeAI.choices
+import DeepFakeAI.globals
+from DeepFakeAI import wording
+from DeepFakeAI.uis import core as ui
+from DeepFakeAI.uis.typing import Update
 
 FACE_ANALYSER_DIRECTION_DROPDOWN : Optional[gradio.Dropdown] = None
 FACE_ANALYSER_AGE_DROPDOWN : Optional[gradio.Dropdown] = None
@@ -22,18 +22,18 @@ def render() -> None:
 		with gradio.Row():
 			FACE_ANALYSER_DIRECTION_DROPDOWN = gradio.Dropdown(
 				label = wording.get('face_analyser_direction_dropdown_label'),
-				choices = facefusion.choices.face_analyser_direction,
-				value = facefusion.globals.face_analyser_direction
+				choices = DeepFakeAI.choices.face_analyser_direction,
+				value = DeepFakeAI.globals.face_analyser_direction
 			)
 			FACE_ANALYSER_AGE_DROPDOWN = gradio.Dropdown(
 				label = wording.get('face_analyser_age_dropdown_label'),
-				choices = ['none'] + facefusion.choices.face_analyser_age,
-				value = facefusion.globals.face_analyser_age or 'none'
+				choices = ['none'] + DeepFakeAI.choices.face_analyser_age,
+				value = DeepFakeAI.globals.face_analyser_age or 'none'
 			)
 			FACE_ANALYSER_GENDER_DROPDOWN = gradio.Dropdown(
 				label = wording.get('face_analyser_gender_dropdown_label'),
-				choices = ['none'] + facefusion.choices.face_analyser_gender,
-				value = facefusion.globals.face_analyser_gender or 'none'
+				choices = ['none'] + DeepFakeAI.choices.face_analyser_gender,
+				value = DeepFakeAI.globals.face_analyser_gender or 'none'
 			)
 		ui.register_component('face_analyser_direction_dropdown', FACE_ANALYSER_DIRECTION_DROPDOWN)
 		ui.register_component('face_analyser_age_dropdown', FACE_ANALYSER_AGE_DROPDOWN)
@@ -48,7 +48,7 @@ def listen() -> None:
 
 def update_dropdown(name : str, value : str) -> Update:
 	if value == 'none':
-		setattr(facefusion.globals, name, None)
+		setattr(DeepFakeAI.globals, name, None)
 	else:
-		setattr(facefusion.globals, name, value)
+		setattr(DeepFakeAI.globals, name, value)
 	return gradio.update(value = value)

@@ -1,7 +1,7 @@
 from typing import Optional
 import gradio
 
-from facefusion import metadata
+from DeepFakeAI import metadata
 
 ABOUT_HTML : Optional[gradio.HTML] = None
 

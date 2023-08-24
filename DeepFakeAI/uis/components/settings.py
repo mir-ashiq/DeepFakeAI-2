@@ -1,9 +1,9 @@
 from typing import Optional
 import gradio
 
-import facefusion.globals
-from facefusion import wording
-from facefusion.uis.typing import Update
+import DeepFakeAI.globals
+from DeepFakeAI import wording
+from DeepFakeAI.uis.typing import Update
 
 KEEP_FPS_CHECKBOX : Optional[gradio.Checkbox] = None
 KEEP_TEMP_CHECKBOX : Optional[gradio.Checkbox] = None
@@ -18,15 +18,15 @@ def render() -> None:
 	with gradio.Box():
 		KEEP_FPS_CHECKBOX = gradio.Checkbox(
 			label = wording.get('keep_fps_checkbox_label'),
-			value = facefusion.globals.keep_fps
+			value = DeepFakeAI.globals.keep_fps
 		)
 		KEEP_TEMP_CHECKBOX = gradio.Checkbox(
 			label = wording.get('keep_temp_checkbox_label'),
-			value = facefusion.globals.keep_temp
+			value = DeepFakeAI.globals.keep_temp
 		)
 		SKIP_AUDIO_CHECKBOX = gradio.Checkbox(
 			label = wording.get('skip_audio_checkbox_label'),
-			value = facefusion.globals.skip_audio
+			value = DeepFakeAI.globals.skip_audio
 		)
 
 
@@ -37,5 +37,5 @@ def listen() -> None:
 
 
 def update_checkbox(name : str, value: bool) -> Update:
-	setattr(facefusion.globals, name, value)
+	setattr(DeepFakeAI.globals, name, value)
 	return gradio.update(value = value)

@@ -8,8 +8,8 @@ from types import ModuleType
 from typing import Any, List, Callable
 from tqdm import tqdm
 
-import facefusion.globals
-from facefusion import wording
+import DeepFakeAI.globals
+from DeepFakeAI import wording
 
 FRAME_PROCESSORS_MODULES : List[ModuleType] = []
 FRAME_PROCESSORS_METHODS =\
@@ -28,7 +28,7 @@ FRAME_PROCESSORS_METHODS =\
 
 def load_frame_processor_module(frame_processor : str) -> Any:
 	try:
-		frame_processor_module = importlib.import_module('facefusion.processors.frame.modules.' + frame_processor)
+		frame_processor_module = importlib.import_module('DeepFakeAI.processors.frame.modules.' + frame_processor)
 		for method_name in FRAME_PROCESSORS_METHODS:
 			if not hasattr(frame_processor_module, method_name):
 				raise NotImplementedError
@@ -52,16 +52,16 @@ def get_frame_processors_modules(frame_processors : List[str]) -> List[ModuleTyp
 def clear_frame_processors_modules() -> None:
 	global FRAME_PROCESSORS_MODULES
 
-	for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
+	for frame_processor_module in get_frame_processors_modules(DeepFakeAI.globals.frame_processors):
 		frame_processor_module.clear_frame_processor()
 	FRAME_PROCESSORS_MODULES = []
 
 
 def multi_process_frame(source_path : str, temp_frame_paths : List[str], process_frames: Callable[[str, List[str], Any], None], update: Callable[[], None]) -> None:
-	with ThreadPoolExecutor(max_workers = facefusion.globals.execution_thread_count) as executor:
+	with ThreadPoolExecutor(max_workers = DeepFakeAI.globals.execution_thread_count) as executor:
 		futures = []
 		queue = create_queue(temp_frame_paths)
-		queue_per_future = max(len(temp_frame_paths) // facefusion.globals.execution_thread_count * facefusion.globals.execution_queue_count, 1)
+		queue_per_future = max(len(temp_frame_paths) // DeepFakeAI.globals.execution_thread_count * DeepFakeAI.globals.execution_queue_count, 1)
 		while not queue.empty():
 			future = executor.submit(process_frames, source_path, pick_queue(queue, queue_per_future), update)
 			futures.append(future)
@@ -97,17 +97,17 @@ def update_progress(progress : Any = None) -> None:
 	progress.set_postfix(
 	{
 		'memory_usage': '{:.2f}'.format(memory_usage).zfill(5) + 'GB',
-		'execution_providers': facefusion.globals.execution_providers,
-		'execution_thread_count': facefusion.globals.execution_thread_count,
-		'execution_queue_count': facefusion.globals.execution_queue_count
+		'execution_providers': DeepFakeAI.globals.execution_providers,
+		'execution_thread_count': DeepFakeAI.globals.execution_thread_count,
+		'execution_queue_count': DeepFakeAI.globals.execution_queue_count
 	})
 	progress.refresh()
 	progress.update(1)
 
 
 def get_device() -> str:
-	if 'CUDAExecutionProvider' in facefusion.globals.execution_providers:
+	if 'CUDAExecutionProvider' in DeepFakeAI.globals.execution_providers:
 		return 'cuda'
-	if 'CoreMLExecutionProvider' in facefusion.globals.execution_providers:
+	if 'CoreMLExecutionProvider' in DeepFakeAI.globals.execution_providers:
 		return 'mps'
 	return 'cpu'

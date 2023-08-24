@@ -1,6 +1,6 @@
 from typing import List
 
-from facefusion.typing import FaceRecognition, FaceAnalyserDirection, FaceAnalyserAge, FaceAnalyserGender, TempFrameFormat, OutputVideoEncoder
+from DeepFakeAI.typing import FaceRecognition, FaceAnalyserDirection, FaceAnalyserAge, FaceAnalyserGender, TempFrameFormat, OutputVideoEncoder
 
 face_recognition : List[FaceRecognition] = [ 'reference', 'many' ]
 face_analyser_direction : List[FaceAnalyserDirection] = [ 'left-right', 'right-left', 'top-bottom', 'bottom-top', 'small-large', 'large-small']

@@ -2,19 +2,19 @@ import glob
 import subprocess
 import pytest
 
-import facefusion.globals
-from facefusion.utilities import conditional_download, detect_fps, extract_frames, create_temp, get_temp_directory_path, clear_temp
+import DeepFakeAI.globals
+from DeepFakeAI.utilities import conditional_download, detect_fps, extract_frames, create_temp, get_temp_directory_path, clear_temp
 
 
 @pytest.fixture(scope = 'module', autouse = True)
 def before_all() -> None:
-	facefusion.globals.temp_frame_quality = 100
-	facefusion.globals.trim_frame_start = None
-	facefusion.globals.trim_frame_end = None
-	facefusion.globals.temp_frame_format = 'png'
+	DeepFakeAI.globals.temp_frame_quality = 100
+	DeepFakeAI.globals.trim_frame_start = None
+	DeepFakeAI.globals.trim_frame_end = None
+	DeepFakeAI.globals.temp_frame_format = 'png'
 	conditional_download('.assets/examples',
 	[
-		'https://github.com/facefusion/facefusion-assets/releases/download/examples/target-240p.mp4'
+		'https://github.com/DeepFakeAI/DeepFakeAI-assets/releases/download/examples/target-240p.mp4'
 	])
 	subprocess.run([ 'ffmpeg', '-i', '.assets/examples/target-240p.mp4', '-vf', 'fps=25', '.assets/examples/target-240p-25fps.mp4' ])
 	subprocess.run([ 'ffmpeg', '-i', '.assets/examples/target-240p.mp4', '-vf', 'fps=30', '.assets/examples/target-240p-30fps.mp4' ])
@@ -23,10 +23,10 @@ def before_all() -> None:
 
 @pytest.fixture(scope = 'function', autouse = True)
 def before_each() -> None:
-	facefusion.globals.trim_frame_start = None
-	facefusion.globals.trim_frame_end = None
-	facefusion.globals.temp_frame_quality = 90
-	facefusion.globals.temp_frame_format = 'jpg'
+	DeepFakeAI.globals.trim_frame_start = None
+	DeepFakeAI.globals.trim_frame_end = None
+	DeepFakeAI.globals.temp_frame_quality = 90
+	DeepFakeAI.globals.temp_frame_format = 'jpg'
 
 
 def test_detect_fps() -> None:
@@ -53,7 +53,7 @@ def test_extract_frames() -> None:
 
 
 def test_extract_frames_with_trim_start() -> None:
-	facefusion.globals.trim_frame_start = 224
+	DeepFakeAI.globals.trim_frame_start = 224
 	data_provider =\
 	[
 		('.assets/examples/target-240p-25fps.mp4', 55),
@@ -71,8 +71,8 @@ def test_extract_frames_with_trim_start() -> None:
 
 
 def test_extract_frames_with_trim_start_and_trim_end() -> None:
-	facefusion.globals.trim_frame_start = 124
-	facefusion.globals.trim_frame_end = 224
+	DeepFakeAI.globals.trim_frame_start = 124
+	DeepFakeAI.globals.trim_frame_end = 224
 	data_provider =\
 	[
 		('.assets/examples/target-240p-25fps.mp4', 120),
@@ -90,7 +90,7 @@ def test_extract_frames_with_trim_start_and_trim_end() -> None:
 
 
 def test_extract_frames_with_trim_end() -> None:
-	facefusion.globals.trim_frame_end = 100
+	DeepFakeAI.globals.trim_frame_end = 100
 	data_provider =\
 	[
 		('.assets/examples/target-240p-25fps.mp4', 120),

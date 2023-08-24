@@ -1,16 +1,16 @@
 import subprocess
 import pytest
 
-from facefusion import wording
-from facefusion.utilities import conditional_download
+from DeepFakeAI import wording
+from DeepFakeAI.utilities import conditional_download
 
 
 @pytest.fixture(scope = 'module', autouse = True)
 def before_all() -> None:
 	conditional_download('.assets/examples',
 	[
-		'https://github.com/facefusion/facefusion-assets/releases/download/examples/source.jpg',
-		'https://github.com/facefusion/facefusion-assets/releases/download/examples/target-1080p.mp4'
+		'https://github.com/DeepFakeAI/DeepFakeAI-assets/releases/download/examples/source.jpg',
+		'https://github.com/DeepFakeAI/DeepFakeAI-assets/releases/download/examples/target-1080p.mp4'
 	])
 	subprocess.run([ 'ffmpeg', '-i', '.assets/examples/target-1080p.mp4', '-vframes', '1', '.assets/examples/target-1080p.jpg' ])
 

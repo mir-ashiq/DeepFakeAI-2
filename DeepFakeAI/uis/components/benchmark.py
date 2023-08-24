@@ -4,12 +4,12 @@ import tempfile
 import statistics
 import gradio
 
-import facefusion.globals
-from facefusion import wording
-from facefusion.capturer import get_video_frame_total
-from facefusion.core import conditional_process
-from facefusion.uis.typing import Update
-from facefusion.utilities import normalize_output_path, clear_temp
+import DeepFakeAI.globals
+from DeepFakeAI import wording
+from DeepFakeAI.capturer import get_video_frame_total
+from DeepFakeAI.core import conditional_process
+from DeepFakeAI.uis.typing import Update
+from DeepFakeAI.utilities import normalize_output_path, clear_temp
 
 BENCHMARK_RESULT_DATAFRAME : Optional[gradio.Dataframe] = None
 BENCHMARK_CYCLES_SLIDER : Optional[gradio.Button] = None
@@ -65,7 +65,7 @@ def listen() -> None:
 
 
 def update(benchmark_cycles : int) -> Update:
-	facefusion.globals.source_path = '.assets/examples/source.jpg'
+	DeepFakeAI.globals.source_path = '.assets/examples/source.jpg'
 	target_paths =\
 	[
 		'.assets/examples/target-240p.mp4',
@@ -84,9 +84,9 @@ def benchmark(target_path : str, benchmark_cycles : int) -> List[Any]:
 	process_times = []
 	total_fps = 0.0
 	for i in range(benchmark_cycles + 1):
-		facefusion.globals.target_path = target_path
-		facefusion.globals.output_path = normalize_output_path(facefusion.globals.source_path, facefusion.globals.target_path, tempfile.gettempdir())
-		video_frame_total = get_video_frame_total(facefusion.globals.target_path)
+		DeepFakeAI.globals.target_path = target_path
+		DeepFakeAI.globals.output_path = normalize_output_path(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, tempfile.gettempdir())
+		video_frame_total = get_video_frame_total(DeepFakeAI.globals.target_path)
 		start_time = time.perf_counter()
 		conditional_process()
 		end_time = time.perf_counter()
@@ -101,7 +101,7 @@ def benchmark(target_path : str, benchmark_cycles : int) -> List[Any]:
 	relative_fps = round(total_fps / benchmark_cycles, 2)
 	return\
 	[
-		facefusion.globals.target_path,
+		DeepFakeAI.globals.target_path,
 		benchmark_cycles,
 		average_run,
 		fastest_run,
@@ -111,6 +111,6 @@ def benchmark(target_path : str, benchmark_cycles : int) -> List[Any]:
 
 
 def clear() -> Update:
-	if facefusion.globals.target_path:
-		clear_temp(facefusion.globals.target_path)
+	if DeepFakeAI.globals.target_path:
+		clear_temp(DeepFakeAI.globals.target_path)
 	return gradio.update(value = None)

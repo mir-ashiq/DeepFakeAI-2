@@ -3,13 +3,13 @@ import cv2
 import threading
 from gfpgan.utils import GFPGANer
 
-import facefusion.globals
-import facefusion.processors.frame.core as frame_processors
-from facefusion import wording
-from facefusion.core import update_status
-from facefusion.face_analyser import get_many_faces
-from facefusion.typing import Frame, Face
-from facefusion.utilities import conditional_download, resolve_relative_path, is_image, is_video
+import DeepFakeAI.globals
+import DeepFakeAI.processors.frame.core as frame_processors
+from DeepFakeAI import wording
+from DeepFakeAI.core import update_status
+from DeepFakeAI.face_analyser import get_many_faces
+from DeepFakeAI.typing import Frame, Face
+from DeepFakeAI.utilities import conditional_download, resolve_relative_path, is_image, is_video
 
 FRAME_PROCESSOR = None
 THREAD_SEMAPHORE = threading.Semaphore()
@@ -39,12 +39,12 @@ def clear_frame_processor() -> None:
 
 def pre_check() -> bool:
 	download_directory_path = resolve_relative_path('../.assets/models')
-	conditional_download(download_directory_path, ['https://github.com/facefusion/facefusion-assets/releases/download/models/GFPGANv1.4.pth'])
+	conditional_download(download_directory_path, ['https://github.com/DeepFakeAI/DeepFakeAI-assets/releases/download/models/GFPGANv1.4.pth'])
 	return True
 
 
 def pre_process() -> bool:
-	if not is_image(facefusion.globals.target_path) and not is_video(facefusion.globals.target_path):
+	if not is_image(DeepFakeAI.globals.target_path) and not is_video(DeepFakeAI.globals.target_path):
 		update_status(wording.get('select_image_or_video_target') + wording.get('exclamation_mark'), NAME)
 		return False
 	return True
@@ -97,4 +97,4 @@ def process_image(source_path : str, target_path : str, output_path : str) -> No
 
 
 def process_video(source_path : str, temp_frame_paths : List[str]) -> None:
-	facefusion.processors.frame.core.process_video(None, temp_frame_paths, process_frames)
+	DeepFakeAI.processors.frame.core.process_video(None, temp_frame_paths, process_frames)

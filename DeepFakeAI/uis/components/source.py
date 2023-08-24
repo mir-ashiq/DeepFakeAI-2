@@ -1,11 +1,11 @@
 from typing import Any, IO, Optional
 import gradio
 
-import facefusion.globals
-from facefusion import wording
-from facefusion.uis import core as ui
-from facefusion.uis.typing import Update
-from facefusion.utilities import is_image
+import DeepFakeAI.globals
+from DeepFakeAI import wording
+from DeepFakeAI.uis import core as ui
+from DeepFakeAI.uis.typing import Update
+from DeepFakeAI.utilities import is_image
 
 SOURCE_FILE : Optional[gradio.File] = None
 SOURCE_IMAGE : Optional[gradio.Image] = None
@@ -16,7 +16,7 @@ def render() -> None:
 	global SOURCE_IMAGE
 
 	with gradio.Box():
-		is_source_image = is_image(facefusion.globals.source_path)
+		is_source_image = is_image(DeepFakeAI.globals.source_path)
 		SOURCE_FILE = gradio.File(
 			file_count = 'single',
 			file_types=
@@ -26,7 +26,7 @@ def render() -> None:
 				'.webp'
 			],
 			label = wording.get('source_file_label'),
-			value = facefusion.globals.source_path if is_source_image else None
+			value = DeepFakeAI.globals.source_path if is_source_image else None
 		)
 		ui.register_component('source_file', SOURCE_FILE)
 		SOURCE_IMAGE = gradio.Image(
@@ -42,7 +42,7 @@ def listen() -> None:
 
 def update(file: IO[Any]) -> Update:
 	if file and is_image(file.name):
-		facefusion.globals.source_path = file.name
+		DeepFakeAI.globals.source_path = file.name
 		return gradio.update(value = file.name, visible = True)
-	facefusion.globals.source_path = None
+	DeepFakeAI.globals.source_path = None
 	return gradio.update(value = None, visible = False)

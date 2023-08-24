@@ -5,7 +5,7 @@ METADATA =\
 	'version': '1.0.0',
 	'license': 'MIT',
 	'author': 'Henry Ruhs',
-	'url': 'https://facefusion.io'
+	'url': 'https://DeepFakeAI.io'
 }
 
 

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from facefusion.typing import Face
+from DeepFakeAI.typing import Face
 
 FACE_REFERENCE = None
 

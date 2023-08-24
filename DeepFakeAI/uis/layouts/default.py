@@ -1,6 +1,6 @@
 import gradio
 
-from facefusion.uis.components import about, processors, execution, temp_frame, settings, source, target, preview, trim_frame, face_analyser, face_selector, output_settings, output
+from DeepFakeAI.uis.components import about, processors, execution, temp_frame, settings, source, target, preview, trim_frame, face_analyser, face_selector, output_settings, output
 
 
 def pre_check() -> bool:
