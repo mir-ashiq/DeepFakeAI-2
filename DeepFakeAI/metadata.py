@@ -1,11 +1,11 @@
 METADATA =\
 {
-	'name': 'FaceFusion',
+	'name': 'DeepFakeAI',
 	'description': 'Next generation face swapper and enhancer',
 	'version': '1.0.0',
 	'license': 'MIT',
-	'author': 'Henry Ruhs',
-	'url': 'https://DeepFakeAI.io'
+	'author': 'Ashiq Hussain Mir',
+	'url': 'https://codegenius.me'
 }
 
 
