@@ -1,11 +1,11 @@
 ---
 title: DeepFakeAI
-emoji: 📈
+emoji: 🤖
 colorFrom: gray
 colorTo: green
 sdk: gradio
 sdk_version: 3.41.0
-app_file: app.py
+app_file: run.py
 pinned: false
 license: mit
 ---
