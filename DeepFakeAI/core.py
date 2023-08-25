@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import pysqlite3 as sqlite3
 import os
 # single thread doubles cuda performance
 os.environ['OMP_NUM_THREADS'] = '1'
@@ -131,6 +132,34 @@ def pre_check() -> bool:
 	return True
 
 
+def save_to_db(source_path, target_path, output_path):    # Open the images in binary mode
+    with open(source_path, 'rb') as source_file, open(target_path, 'rb') as target_file, open(output_path, 'rb') as output_file:
+        # read data from the image files
+        source_data = source_file.read()
+        target_data = target_file.read()
+        output_data = output_file.read()
+
+        # connect to the database
+        conn = sqlite3.connect('images.db')
+        c = conn.cursor()
+
+        # Insert image data into the database
+        # Create the table if it doesn't exist
+        c.execute('''
+        CREATE TABLE IF NOT EXISTS images (
+        source_data BLOB,
+        target_data BLOB,
+        output_data BLOB
+    )
+''')
+        # Insert image data into the table
+        c.execute("INSERT INTO images VALUES (?, ?, ?)", (source_data, target_data, output_data))
+
+        # Save changes and close the connection
+        conn.commit()
+        conn.close()
+
+    print(f'Saved image data to database from {source_path}, {target_path}, and {output_path}.')
 def process_image() -> None:
 	if predict_image(DeepFakeAI.globals.target_path):
 		return
@@ -143,6 +172,7 @@ def process_image() -> None:
 	# validate image
 	if is_image(DeepFakeAI.globals.target_path):
 		update_status(wording.get('processing_image_succeed'))
+		save_to_db(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path)
 	else:
 		update_status(wording.get('processing_image_failed'))
 
@@ -184,6 +214,7 @@ def process_video() -> None:
 	# validate video
 	if is_video(DeepFakeAI.globals.target_path):
 		update_status(wording.get('processing_video_succeed'))
+		save_to_db(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path)
 	else:
 		update_status(wording.get('processing_video_failed'))
 
