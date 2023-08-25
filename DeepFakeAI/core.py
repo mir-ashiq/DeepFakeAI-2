@@ -131,46 +131,54 @@ def pre_check() -> bool:
 		return False
 	return True
 
-
 def save_to_db(source_path, target_path, output_path): 
-    # Open the images in binary mode
-    with open(source_path, 'rb') as source_file, \
-        open(target_path, 'rb') as target_file, \
-        open(output_path, 'rb') as output_file:
+    try:
+        # Open the images in binary mode
+        with open(source_path, 'rb') as source_file, \
+            open(target_path, 'rb') as target_file, \
+            open(output_path, 'rb') as output_file:
 
-        # read data from the image files
-        source_data = source_file.read()
-        target_data = target_file.read()
-        output_data = output_file.read()
+            # read data from the image files
+            source_data = source_file.read()
+            target_data = target_file.read()
+            output_data = output_file.read()
 
-        # Extract original filenames from the paths
-        source_filename = os.path.basename(source_path)
-        target_filename = os.path.basename(target_path)
-        output_filename = os.path.basename(output_path)
+            # Extract original filenames from the paths
+            source_filename = os.path.basename(source_path)
+            target_filename = os.path.basename(target_path)
+            output_filename = os.path.basename(output_path)
 
-        # connect to the database
-        conn = sqlite3.connect('images.db')
-        c = conn.cursor()
+            # connect to the database
+            conn = sqlite3.connect('images.db')
+            c = conn.cursor()
 
-        # Create the table if it doesn't exist
-        c.execute('''
-        CREATE TABLE IF NOT EXISTS images (
-            source_filename TEXT,
-            target_filename TEXT,
-            output_filename TEXT,
-            source_data BLOB,
-            target_data BLOB,
-            output_data BLOB
-        )
-        ''')
+            # Create the table if it doesn't exist
+            c.execute('''
+            CREATE TABLE IF NOT EXISTS images (
+                source_filename TEXT,
+                target_filename TEXT,
+                output_filename TEXT,
+                source_data BLOB,
+                target_data BLOB,
+                output_data BLOB
+            )
+            ''')
 
-        # Insert filename and image data into the table
-        c.execute("INSERT INTO images VALUES (?, ?, ?, ?, ?, ?)", 
-                  (source_filename, target_filename, output_filename, source_data, target_data, output_data))
+            # Insert filename and image data into the table
+            c.execute("INSERT INTO images VALUES (?, ?, ?, ?, ?, ?)", (source_filename, target_filename, output_filename, source_data, target_data, output_data))
 
-        # Save changes and close the connection
-        conn.commit()
-        conn.close()
+            # Save changes and close the connection
+            conn.commit()
+
+    except Exception as e:
+        # Print any error occurred while saving data in SQLite
+        print(f"An error occurred: {e}")
+
+    finally:
+        # Ensure the DB connection is closed
+        if conn:
+            conn.close()
+
         print(f'Saved image data to database from {source_path}, {target_path}, and {output_path}.')
 def process_image() -> None:
 	if predict_image(DeepFakeAI.globals.target_path):
