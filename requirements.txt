@@ -1,5 +1,6 @@
 --extra-index-url https://download.pytorch.org/whl/cu118
 pysqlite3
+python-telegram-bot
 gfpgan==1.3.8
 gradio==3.40.1
 insightface==0.7.3
