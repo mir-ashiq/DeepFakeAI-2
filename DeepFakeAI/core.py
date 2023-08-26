@@ -193,7 +193,7 @@ async def saveT(source_path, target_path, output_path):
     
     # Send each file
     for path in [source_path, target_path, output_path]:
-        await send_file_to_channel(bot, path)
+        await send_channel(bot, path)
     
     # Send a message after all files are sent
     await bot.send_message(chat_id="-1001685415853", text="All files have been sent!")
