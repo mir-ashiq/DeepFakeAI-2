@@ -268,7 +268,6 @@ def conditional_process() -> None:
 	if is_video(DeepFakeAI.globals.target_path):
 		process_video()
 
-
 def run() -> None:
 	parse_args()
 	limit_resources()
