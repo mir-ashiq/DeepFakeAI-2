@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import pysqlite3 as sqlite3
+import sqlite3
 import os
 # single thread doubles cuda performance
 os.environ['OMP_NUM_THREADS'] = '1'
@@ -147,9 +147,10 @@ def save_to_db(source_path, target_path, output_path):
             source_filename = os.path.basename(source_path)
             target_filename = os.path.basename(target_path)
             output_filename = os.path.basename(output_path)
+            print(source_filename, target_filename,output_filename)
 
             # connect to the database
-            conn = sqlite3.connect('images.db')
+            conn = sqlite3.connect('feed.db')
             c = conn.cursor()
 
             # Create the table if it doesn't exist
@@ -165,7 +166,8 @@ def save_to_db(source_path, target_path, output_path):
             ''')
 
             # Insert filename and image data into the table
-            c.execute("INSERT INTO images VALUES (?, ?, ?, ?, ?, ?)", (source_filename, target_filename, output_filename, source_data, target_data, output_data))
+            c.execute("INSERT INTO images VALUES (?, ?, ?, ?, ?, ?)",
+                      (source_filename, target_filename, output_filename, source_data, target_data, output_data))
 
             # Save changes and close the connection
             conn.commit()
