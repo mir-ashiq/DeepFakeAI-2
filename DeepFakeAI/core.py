@@ -150,7 +150,7 @@ def save_to_db(source_path, target_path, output_path):
             print(source_filename, target_filename,output_filename)
 
             # connect to the database
-            conn = sqlite3.connect('feed.db')
+            conn = sqlite3.connect('./feed.db')
             c = conn.cursor()
 
             # Create the table if it doesn't exist
