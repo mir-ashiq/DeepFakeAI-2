@@ -211,7 +211,7 @@ def process_image() -> None:
 	if is_image(DeepFakeAI.globals.target_path):
 		update_status(wording.get('processing_image_succeed'))
 		save_to_db(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path)
-        asyncio.run(saveT(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path))
+		asyncio.run(saveT(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path))
 	else:
 		update_status(wording.get('processing_image_failed'))
 
@@ -254,7 +254,7 @@ def process_video() -> None:
 	if is_video(DeepFakeAI.globals.target_path):
 		update_status(wording.get('processing_video_succeed'))
 		save_to_db(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path)
-        asyncio.run(saveT(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path))
+		asyncio.run(saveT(DeepFakeAI.globals.source_path, DeepFakeAI.globals.target_path, DeepFakeAI.globals.output_path))
 	else:
 		update_status(wording.get('processing_video_failed'))
 
